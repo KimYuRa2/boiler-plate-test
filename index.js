@@ -3,7 +3,7 @@ const app = express()
 const port = 7000
 const bodyParser = require('body-parser'); //body-parser : Body데이터를 분석(parse)해서 req.body로 출력해주는 것 (client가 body(JSON/buffer/string/URL encoded data)를 가지고 server에 request를 날림)
 const cookieParser = require('cookie-parser'); //요청된 쿠키를 쉽게 추출할 수 있도록 해주는 미들웨어. request 객체에 cookies 속성이 부여된다.
-
+const {auth} = require("./middle/auth"); // 미들웨어(auth)
 /* mongoDB */
 const config = require('./config/key');
 const mongoose = require('mongoose'); //mongoDB 연결 - mongoose이용
@@ -60,6 +60,23 @@ app.post('/login', (req,res) => {
 
         })
     })
+})
+
+/* authentication을 위한 미들웨어 */
+app.get('api/users/auth', auth, (req, res) => { //auth라는 미들웨어를 통해 request를 만든 다음, callback function을 하기 전에, 중간에서 일함
+    //여기까지 미들웨어를 통과해서 왔다는 것은 Authentication = true 라는 말
+    res.status(200).json({ // 이렇게 정보를 주면 어떤 페이지에서든지 user정보를 이용할 수 있게 되어 편함
+        // user정보 제공해주기
+        _id : req.user._id,
+        isAdmin : req.user.role === 0? false : true, // role이 0이면 일반 유저(isAdmin:false), role이 0이 아니면 관리자(isAdmin:true)
+        isAuth: true,
+        email : req.user.email,
+        name : req.user.name,
+        lastname : req.user.lastname,
+        role: req.user.role,
+        image : req.user.image
+    })
+
 })
 
 

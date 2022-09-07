@@ -80,6 +80,19 @@ user1Schema.methods.generateToken = function(cb) {
     })
 }
 
+/* 로그인 된 상태에서(token 부여됨) 인증(Authentication) 확인을 위해  => token 복호화(decode) 후 나온 user id를 이용해서 유저를 찾은 다음 , 클라이언트에서 가져온 token과 보관된 token이 일치하는지 확인  */
+user1Schema.statics.findByToken = function( token, cb ){
+    var user = this;
+    //user._id + "secretToken" = token
+    jwt.verify( token, 'secretToken' , function(err, decoded){ //token을 decode(복호화)한다
+        user.findOne({ "_id" : decoded, "token" : token }, function( err,user ){
+            //token decode 후 나온 user id(_id)를 이용해서 유저를 찾은 다음
+            //클라이언트에서 가져온 token과 보관된 token이 일치하는지 확인
+            if(err) return cb(err);
+            cb(null, user) 
+        })
+    })
+}
 
 const User1 = mongoose.model('User1', user1Schema);
 
