@@ -8,8 +8,10 @@ function LandingPage() {
         .then(response=> console.log(response.data));
     }, []); // [] : LandingPage 컴포넌트가 "리렌더링 될 때마다" useEffect 실행됨
   return (
-    <div>
-      LandingPage
+    <div style={
+        {display:'flex', justifyContent: 'center', alignItems:'center',width:'100%',height:'100vh'}
+    }>
+      시작페이지
     </div>
   )
 }
