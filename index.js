@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 /* 회원가입 */
-app.post('/register', (req,res) => {
+app.post('/api/users/register', (req,res) => {
     //회원가입 할 때 필요한 정보들을 client에서 가져오면
     //그것들을 데이터베이스에 넣어준다
     const user =  new User1(req.body); // req.body안에는 {name:'hello', email: '~~', password:'~~',.. } 등의 정보가 들어있음 => body parser이 있어서 가능!
@@ -36,7 +36,7 @@ app.post('/register', (req,res) => {
 })
 
 /* 로그인 */
-app.post('/login', (req,res) => {
+app.post('/api/users/login', (req,res) => {
     //1) 요청된 email을 db(User1)에서 찾기
     User1.findOne( { email: req.body.email} , (err, user) => {
         if(!user){ //user가 없으면
@@ -63,7 +63,7 @@ app.post('/login', (req,res) => {
 })
 
 /* authentication을 위한 미들웨어 */
-app.get('api/users/auth', auth, (req, res) => { //auth라는 미들웨어를 통해 request를 만든 다음, callback function을 하기 전에, 중간에서 일함
+app.get('/api/users/auth', auth, (req, res) => { //auth라는 미들웨어를 통해 request를 만든 다음, callback function을 하기 전에, 중간에서 일함
     //여기까지 미들웨어를 통과해서 왔다는 것은 Authentication = true 라는 말
     res.status(200).json({ // 이렇게 정보를 주면 어떤 페이지에서든지 user정보를 이용할 수 있게 되어 편함
         // user정보 제공해주기
@@ -76,7 +76,18 @@ app.get('api/users/auth', auth, (req, res) => { //auth라는 미들웨어를 통
         role: req.user.role,
         image : req.user.image
     })
+})
 
+
+/* 로그아웃 : 로그아웃 하려는 유저를 DB에서 찾아서 , 그 유저의 토큰을 지워줌. (토큰을 지워주면 인증이 안돼서, 로그인 기능이 풀림) */
+app.get('/api/users/logout', auth, (req,res)=> {
+    //로그아웃 하려는 유저를 DB에서 찾아서
+    User1.findOneAndUpdate( {_id: req.user._id}, {token: ""}, (err, user) => {  //auth 미들웨어에서 req에 넣어준 id를 찾아서, token을 지워줌("")
+        if(err) return res.json({ success : false, err });
+        return res.status(200).send({ // 로그아웃 성공
+            success : true
+        })
+    })
 })
 
 
