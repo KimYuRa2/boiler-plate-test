@@ -1,9 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+// import ReactDOM from 'react-dom/client';
+// import { createRoot } from "react-dom/client";// import ReactDOM from 'react-dom/client';
+
+// import ReactDOM from 'react-dom';
+// import * as ReactDOMClient from 'react-dom/client';
+
+import ReactDOM from "react-dom/client";
+
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import 'antd/dist/antd.css'; // Antd CSS Framework 사용
+// import 'antd/dist/antd.css'; // Antd CSS Framework 사용
 
 /* redux 설정 */
 import {Provider} from 'react-redux';
@@ -16,17 +23,19 @@ import Reducer from './_reducers';
 //promiseMiddleware,ReduxThunk를 적용할 수 있도록 createStoreWithMiddlewarestore을 만들어주기
 const createStoreWithMiddleware = applyMiddleware(promiseMiddleware, ReduxThunk)(createStore)
 
-ReactDOM.render(
+// const root = createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
   //Provider : redux와 나의 app을 연결시켜줌
   <Provider
-    store = { createStoreWithMiddleware( reducer,
+    store = { createStoreWithMiddleware( Reducer,
       window.__REDUX_DEVTOOLS_EXTENSION__ &&
       window.__REDUX_DEVTOOLS_EXTENSION__()
     )}
   >
     <App />
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 )
 
 
