@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import {loginUser} from '../../../_actions/user_action';
 import user_reducer from '../../../_reducers/user_reducer';
 import {useNavigate} from 'react-router-dom'; // useNavigate로 페이지 이동 => react-router-dom v6업데이트로 history로 페이지이동 시 오류가 났었음! 
+import Auth from '../../hoc/auth';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -51,4 +52,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default Auth(LoginPage, false)

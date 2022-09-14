@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react' //useEffect : 리액트 컴포넌트가 "렌더링 될 때마다", "특정 작업을 실행"할 수 있도록 하는 Hook
 import axios from 'axios'; // react.js(client)에서 server로 "request를 보낼 때" 사용됨! (client폴더에서 npm i axios --save)
 import {useNavigate} from 'react-router-dom';
+import Auth from '../../hoc/auth';
 
 
 function LandingPage() {
@@ -32,4 +33,4 @@ function LandingPage() {
   )
 }
 
-export default LandingPage
+export default Auth(LandingPage, null)
